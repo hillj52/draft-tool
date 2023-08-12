@@ -1,0 +1,138 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  username        String   @unique
+  passwordHash    String
+}
+
+model Player {
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  drafted         Boolean   @default(false)
+  name            String
+  team            String
+  position        Position
+  byeWeek         Int       @default(-1)
+  price           Int?
+  passingStats    PassingStats?  
+  rushingStats    RushingStats?
+  recievingStats  RecievingStats?
+  draftRecord     Draft?
+  value           Int       @default(0)
+}
+
+model PassingStats {
+  id              String  @id @default(auto()) @map("_id") @db.ObjectId
+  attempts        Float   @default(0)
+  completions     Float   @default(0)
+  yards           Float   @default(0)
+  touchdowns      Float   @default(0)
+  interceptions   Float   @default(0)
+  player          Player  @relation(fields: [playerId], references: [id])
+  playerId        String  @unique @db.ObjectId
+}
+
+model RushingStats {
+  id              String  @id @default(auto()) @map("_id") @db.ObjectId
+  attempts        Float   @default(0)
+  yards           Float   @default(0)
+  touchdowns      Float   @default(0)
+  fumblesLost     Float   @default(0)
+  player          Player  @relation(fields: [playerId], references: [id])
+  playerId        String  @unique @db.ObjectId
+}
+
+model RecievingStats {
+  id              String  @id @default(auto()) @map("_id") @db.ObjectId
+  receptions      Float   @default(0)
+  yards           Float   @default(0)
+  touchdowns      Float   @default(0)
+  player          Player  @relation(fields: [playerId], references: [id])
+  playerId        String  @unique @db.ObjectId
+}
+
+model Kicker {
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  drafted         Boolean   @default(false)
+  name            String
+  team            String
+  byeWeek         Int       @default(-1)
+  projectedPoints Float     @default(0)
+  value           Int       @default(0)
+}
+
+model Defense {
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  drafted         Boolean   @default(false)
+  name            String
+  team            String
+  byeWeek         Int       @default(-1)
+  projectedPoints Float     @default(0)
+  value           Int       @default(0)
+}
+
+enum Position {
+  QB
+  WR
+  RB
+  TE
+  K
+  DST
+}
+
+model ByeWeek {
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  team            String
+  byeWeek         Int       @default(-1)
+}
+
+enum RosterPosition {
+  QB
+  RB1
+  RB2
+  WR1
+  WR2
+  FLEX
+  OP
+  TE
+  K
+  DST
+  BENCH
+}
+
+model Draft {
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  player          Player    @relation(fields: [playerId], references: [id])
+  playerId        String    @unique @db.ObjectId
+  team            Team      @relation(fields: [teamId], references: [id])
+  teamId          String    @db.ObjectId
+  rosterPosition  RosterPosition
+}
+
+model Team {
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  name            String
+  owner           String
+  drafted         Draft[]
+}

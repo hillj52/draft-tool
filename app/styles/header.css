@@ -1,0 +1,19 @@
+.header {
+  font-weight: bold;
+  text-align: center;
+  padding: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  border-radius: 8px;
+  margin: 1rem;
+  background-color: rgb(105, 13, 148);
+  max-height: fit-content;
+  position: sticky;
+  top: 0px;
+  height: 20px;
+}
+
+span.text {
+  vertical-align: middle;
+  display: inline-block;
+  line-height: normal;
+}
