@@ -1,6 +1,7 @@
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import AvailablePlayers from "~/components/player/available-players";
+import PlayerProvider from '~/components/player/player-context';
 import Teams from "~/components/team/teams";
 import { getAvailablePlayers } from "~/utils/player.server";
 import { getTeams } from "~/utils/team.server";
@@ -21,13 +22,15 @@ export default function Dashboard() {
 
   return (
     <main>
-      <span>
-        Total Money Remaining: Not yet Implemented
-        Total Value Remaining: ${data.valueRemaining}
-      </span>
-      <Teams teams={data.teams}/>
-      <br />
-      <AvailablePlayers availablePlayers={data.availablePlayer}/>
+      <PlayerProvider>
+        <span>
+          Total Money Remaining: Not yet Implemented
+          Total Value Remaining: ${data.valueRemaining}
+        </span>
+        <Teams teams={data.teams}/>
+        <br />
+        <AvailablePlayers availablePlayers={data.availablePlayer}/>
+      </PlayerProvider>
     </main>
   );
 }

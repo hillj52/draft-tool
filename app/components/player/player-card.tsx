@@ -1,14 +1,18 @@
 import type { PlayerProjection } from "~/utils/player.server"
 import Card from "../UI/card";
+import { useContext } from 'react';
+import { PlayerContext } from './player-context';
 
 interface PlayerCardProps {
   player: PlayerProjection;
 }
 
 const PlayerCard: React.FC<PlayerCardProps> = ({ player }) => {
+  const { featurePlayer } = useContext(PlayerContext);
   const clickHandler = (event: React.MouseEvent) => {
     event.preventDefault();
     console.log('Feature Player:', player.id);
+    featurePlayer(player.id);
   }
 
   return (
